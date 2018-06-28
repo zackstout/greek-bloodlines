@@ -2,6 +2,7 @@
 
 import { text, plays } from './stuff.js';
 
+
 $(document).ready(function() {
 
   readFromProlog(arr);
@@ -9,6 +10,7 @@ $(document).ready(function() {
 
   attachPlays();
   console.log(allPeeps);
+
 
   // Issue: if you use '/' here, main page will direct here, so json will display in browser and console.log's *won't* execute (???):
   $.get('/stuff').done(function(res) {
@@ -44,16 +46,50 @@ $(document).ready(function() {
 
     console.log(result);
 
+    addScraped(result, allPeeps);
+
+    console.log(allPeeps);
+
   }).catch(function(err) {
     console.log(err);
   });
 
 });
 
-var arr = text.split('\n');
-console.log(arr);
 
-var allPeeps = [{name: 'dummy'}];
+
+function addScraped(chars, arr) {
+  chars.forEach(char => {
+    // console.log(char);
+    const lowerChar = char.char == '' ? '' : char.char[0].toLowerCase() + char.char.slice(1);
+
+    let broke = false;
+    for (let i=0; i < arr.length; i++) {
+      if (arr[i].name == lowerChar) {
+        arr[i].plays2 = char.plays;
+        broke = true;
+        break;
+      }
+    }
+
+    if (!broke) {
+      arr.push({
+        name: lowerChar,
+        plays2: char.plays
+      });
+    }
+
+  });
+}
+
+
+
+
+const arr = text.split('\n');
+// console.log(arr);
+
+let allPeeps = [{name: 'dummy'}];
+
 
 // Creating allPeeps object (This is so hideous):
 function readFromProlog(arr) {
@@ -93,7 +129,8 @@ function readFromProlog(arr) {
 }
 
 
-// There will be a bug if index is 0, because will look falsy.
+
+// There will be a bug if index is 0, because will look falsy. Ok i think we fixed it.
 function checkForName(arr, name) {
   for (var i=0; i < arr.length; i++) {
     if (arr[i].name == name) return i;
@@ -102,15 +139,13 @@ function checkForName(arr, name) {
 }
 
 
+
 function attachPlays() {
-  allPeeps.forEach(peep => peep.plays = []);
+  allPeeps.forEach(peep => peep.plays = []); // ...is this needed?
 
   allPeeps.forEach(peep => {
-    // console.log(peep.name.toUpperCase());
     plays.forEach(play => {
       play.characters.forEach(char => {
-        // console.log(char);
-
         if (peep.name[0].toUpperCase() + peep.name.substring(1) == char) {
           peep.plays.push(play);
         }

@@ -9,8 +9,6 @@ const cheerio = require('cheerio');
 const app = express();
 const port = process.env.PORT || 6006;
 
-
-
 const options = {
   uri: 'http://www.ancient-literature.com/characters.html',
   transform: function (body) {
@@ -22,20 +20,18 @@ let allData = [];
 
 app.get('/stuff', function(req, res) {
   console.log('we in');
-  // don't forget to clear, or will just push onto existing one each time until server restarts:
+  // Don't forget to clear, or will just push onto existing one each time until server restarts:
   allData = [];
 
   rp(options).then(data => {
-    // console.log(data);
+
+    // Interesting, 'data' is functioning like the '$' in jQuery:
+    // Odd, we *do* need the i here, though i'm not sure why:
     data('a').each((i, elem) => {
-      // console.log(elem);
       if (elem.children[0]) {
-        // console.log(elem.children[0].data);
         allData.push(elem.children[0].data);
       }
-      // elem.children.forEach(child => console.log(child.children));
     });
-    console.log(allData);
 
     res.send(allData);
 
@@ -46,9 +42,6 @@ app.get('/stuff', function(req, res) {
 
 
 app.use(express.static('public'));
-
-// var site = request('http://www.ancient-literature.com/characters.html');
-// console.log(site);
 
 //Listener
 app.listen(port, function() {
