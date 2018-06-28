@@ -1,4 +1,5 @@
 
+export const text = `
 parent(tantalus, pelops).
 parent(tantalus, niobe).
 parent(pelops, pittheus).
@@ -261,3 +262,38 @@ titan(leto).
 titan(atlas).
 titan(prometheus).
 titan(themis).
+`;
+
+export const plays = [
+  {name: "Philoctetes", characters: ["Odysseus", "Neoptolemus", 'Philoctetes', 'Heracles']},
+  {name: "Oedipus Rex", characters: ["Oedipus", "Jocasta", 'Creon', 'Tiresias', 'Shepherd']},
+  {name: "Oedipus at Colonus", characters: ["Oedipus", "Antigone", 'Ismene', 'Theseus', 'Creon', 'Polynices']},
+  {name: "Trachae", characters: ["Deianeira", "Heracles", 'Iole', 'Lichas', 'Hyllus']},
+  {name: "Philoctetes", characters: ["Odysseus", "Neoptolemus", 'Philoctetes', 'Heracles']},
+  {name: "Electra", characters: ["Electra", "Orestes", 'Chrysothemis', 'Clytemnestra', 'Aegisthus', '~Castor']},
+  {name: "Ajax", characters: ["Ajax", "Athena", 'Odysseus', 'Tecmessa', 'Teucer', 'Menelaus', 'Agamemnon']},
+  {name: "Antigone", characters: ["Antigone", "Creon", 'Haemon', 'Eurydice', 'Ismene', 'Tiresias']},
+  {name: "Amphitryon", characters: ["Amphitryon", "Alcmene"]},
+
+
+  {name: "Alcestis", characters: ["Alcestis", "Admetus", 'Apollo', 'Death', 'Heracles']},
+  {name: "Andromache", characters: ["Andromache", "Hermione", 'Menelaus', 'Orestes', 'Thetis', 'Peleus']},
+  {name: "Bacchae", characters: ["Dionysus", "Tiresias", 'Cadmus', 'Pentheus', 'Agave']},
+  {name: "Heraclidae", characters: ["Iolaus", "Macaria", 'Demophon', 'Alcmene', 'Eurystheus']},
+  {name: "Hecuba", characters: ["Hecuba", "Polydorus", 'Polyxena', 'Odysseus', 'Agamemnon', 'Polymestor', 'Talthybius']},
+  {name: "Helen", characters: ["Helen", "Teucer", 'Menelaus', 'Theonoe', 'Castor']},
+  {name: "Hippolytus", characters: ["Hippolytus", "Aphrodite", 'Phaedra', 'Theseus', 'Artemis']},
+  {name: "Helen", characters: ["Helen", "Teucer", 'Menelaus', 'Theonoe', 'Castor']},
+  {name: "Heracles", characters: ["Heracles", "Amphitryon", 'Megara', 'Lycus', 'Theseus']},
+  {name: "Ion", characters: ["Ion", "Hermes", 'Xuthus', 'Athena', 'Creusa']},
+  {name: "Iphigenia in Aulis", characters: ["Iphigenia", "Menelaus", 'Agamemnon', 'Clytemnestra', 'Achilles']},
+  {name: "Iphigenia in Tauris", characters: ["Iphigenia", "Orestes", 'Pylades', 'Thoas', 'Athena']},
+  {name: "Medea", characters: ["Medea", "Jason", 'Aegeus', 'Creon']},
+  {name: "Phoenician Women", characters: ["Jocasta", "Antigone", 'Polyneices', 'Eteocles', 'Creon', 'Tiresias', 'Menoeceus', 'Oedipus']},
+  {name: "Trojan Women", characters: ["Hecuba", "Cassandra", 'Andromache', 'Talthybius', 'Menelaus', 'Helen', 'Poseidon', 'Athena']},
+
+  {name: "Rhesus", characters: []},
+  {name: "The Suppliants", characters: []},
+  {name: "Orestes", characters: []},
+  {name: "Cyclops", characters: []},
+];
