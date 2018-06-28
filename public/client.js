@@ -8,8 +8,18 @@ $(document).ready(function() {
   readFromProlog(arr);
   console.log(allPeeps);
 
-  attachPlays();
+  // attachPlays();
   console.log(allPeeps);
+
+  $.get('/stuff2').done(function(res) {
+    console.log(res);
+    // for (let i = 0; i < res.length; i++) {
+    //   let line = res[i].children[0].data;
+    //   console.log(line);
+    // }
+  }).catch(function(err) {
+    console.log(err);
+  });
 
 
   // Issue: if you use '/' here, main page will direct here, so json will display in browser and console.log's *won't* execute (???):

@@ -16,6 +16,29 @@ const options = {
   }
 };
 
+const options2 = {
+  uri: 'http://www.personal.utulsa.edu/~marc-carlson/history/clam.html',
+  transform: function (body) {
+    return cheerio.load(body);
+  }
+};
+
+// Haven't worked with these ones yet:
+const options3 = {
+  uri: 'http://www.argyrou.net/homepage/Myths2.htm',
+  transform: function (body) {
+    return cheerio.load(body);
+  }
+};
+
+const options4 = {
+  uri: 'https://www.ancient-greece.org/resources/timeline.html',
+  transform: function (body) {
+    return cheerio.load(body);
+  }
+};
+
+
 let allData = [];
 
 app.get('/stuff', function(req, res) {
@@ -36,6 +59,18 @@ app.get('/stuff', function(req, res) {
     res.send(allData);
 
   }).catch(err => console.log(err));
+});
+
+
+// Almost there:
+app.get('/stuff2', function(req, res) {
+  rp(options2).then(data => {
+    data('font').each((i, elem) => {
+      // console.log(elem);
+      let line = elem.children[0].data;
+      console.log(line);
+    });
+  });
 });
 
 
