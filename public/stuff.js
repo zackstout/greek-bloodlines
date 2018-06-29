@@ -100,7 +100,7 @@ parent(uranus, oceanus).
 parent(uranus, coeus).
 parent(uranus, cronus).
 parent(uranus, rhea).
-parent(uranus, iaepetus).
+parent(uranus, iapetus).
 parent(uranus, mnemosyne).
 parent(uranus, tethys).
 parent(gaia, hyperion).
@@ -108,7 +108,7 @@ parent(gaia, oceanus).
 parent(gaia, coeus).
 parent(gaia, cronus).
 parent(gaia, rhea).
-parent(gaia, iaepetus).
+parent(gaia, iapetus).
 parent(gaia, mnemosyne).
 parent(gaia, tethys).
 parent(uranus, theia).
@@ -127,6 +127,45 @@ parent(iapetus, atlas).
 parent(clymene, atlas).
 parent(iapetus, prometheus).
 parent(clymene, prometheus).
+
+
+parent(chaos, tartarus).
+parent(chaos, gaia).
+parent(chaos, eros).
+parent(chaos, erebus).
+parent(chaos, nyx).
+parent(gaia, uranus).
+parent(gaia, ourea).
+parent(gaia, pontus).
+parent(erebus, aether).
+parent(nyx, aether).
+parent(erebus, hemera).
+parent(nyx, hemera).
+parent(nyx, thanatos).
+parent(nyx, hypnos).
+parent(nyx, momus).
+parent(nyx, philotes).
+parent(nyx, nemesis).
+parent(nyx, oneiroi).
+parent(nyx, moros).
+parent(nyx, eris).
+parent(uranus, aphrodite).
+parent(uranus, gigantes).
+parent(uranus, erinyes).
+parent(uranus, cyclopes).
+parent(uranus, echidna).
+parent(gaia, cyclopes).
+parent(gaia, echidna).
+parent(uranus, themis).
+parent(gaia, themis).
+parent(uranus, crius).
+parent(gaia, crius).
+parent(oceanus, pleione).
+parent(tethys, pleione).
+parent(pleione, maia).
+parent(atlas, maia).
+parent(maia, hermes).
+parent(zeus, hermes).
 
 
 female(aethra).

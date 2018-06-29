@@ -6,17 +6,42 @@ import { text, plays } from './stuff.js';
 $(document).ready(function() {
 
   readFromProlog(arr);
+  // console.log(allPeeps);
+
+  attachPlays();
   console.log(allPeeps);
 
-  // attachPlays();
-  console.log(allPeeps);
+  // $.get('/stuff2').done(function(res) {
+  //   console.log("stuff2, ", res);
+  //   // for (let i = 0; i < res.length; i++) {
+  //   //   let line = res[i].children[0].data;
+  //   //   console.log(line);
+  //   // }
+  // }).catch(function(err) {
+  //   console.log(err);
+  // });
 
-  $.get('/stuff2').done(function(res) {
-    console.log(res);
+  $.get('/stuff3').done(function(res) {
+    // console.log("stuff3, ", res);
     // for (let i = 0; i < res.length; i++) {
     //   let line = res[i].children[0].data;
     //   console.log(line);
     // }
+    for (let i=0; i < res.length; i++) {
+      let line = res[i];
+      if (line) {
+        allPeeps.forEach(peep => {
+          if (line.includes(peep.name[0].toUpperCase() + peep.name.slice(1))) {
+            let fact = line;
+            let date = res[i - 1];
+            peep.facts.push({line: fact, date: date});
+          }
+        });
+      }
+    }
+
+    console.log(allPeeps);
+
   }).catch(function(err) {
     console.log(err);
   });
@@ -24,7 +49,7 @@ $(document).ready(function() {
 
   // Issue: if you use '/' here, main page will direct here, so json will display in browser and console.log's *won't* execute (???):
   $.get('/stuff').done(function(res) {
-    console.log(res);
+    // console.log("stuff, ", res);
 
     // Each element of result array will be an object with name and plays properties:
     let result = [];
@@ -54,11 +79,11 @@ $(document).ready(function() {
 
     }
 
-    console.log(result);
+    console.log("result, ", result);
 
     addScraped(result, allPeeps);
 
-    console.log(allPeeps);
+    console.log("allPeeps, ", allPeeps);
 
   }).catch(function(err) {
     console.log(err);
@@ -152,6 +177,7 @@ function checkForName(arr, name) {
 
 function attachPlays() {
   allPeeps.forEach(peep => peep.plays = []); // ...is this needed?
+  allPeeps.forEach(peep => peep.facts = []); // ...is this needed?
 
   allPeeps.forEach(peep => {
     plays.forEach(play => {
