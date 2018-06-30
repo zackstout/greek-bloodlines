@@ -34,6 +34,7 @@ $(document).ready(function() {
           if (line.includes(peep.name[0].toUpperCase() + peep.name.slice(1))) {
             let fact = line;
             let date = res[i - 1];
+            
             peep.facts.push({line: fact, date: date});
           }
         });
