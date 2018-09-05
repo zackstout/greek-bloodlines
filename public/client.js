@@ -2,14 +2,73 @@
 
 import { text, plays } from './stuff.js';
 
+const arr = text.split('\n');
+
+let first_char;
+let allPeeps = [{name: 'dummy'}];
+
+function findChar(char) {
+  for (let i=0; i < allPeeps.length; i++) {
+    if (allPeeps[i].name == char) {
+      return allPeeps[i];
+    }
+  }
+  return null;
+}
 
 $(document).ready(function() {
+  first_char = 'agamemnon';
+
+  // Update child HTML:
+  $('#child').html(first_char);
+
+  // Click listeners:
+
+  // When a parent is clicked, we want to alter CHILD's property to hold that value, change the CHILD to live there, move it to previous CHILD-position, fade in newParents;
+  $('#par1').on('click', function() {
+    console.log('clicked left', findChar($('#par1').html()).plays2);
+
+    const child_pos = $('#child').position();
+    const par_pos = $('#par1').position();
+    const left_diff = child_pos.left - par_pos.left;
+    const top_diff = child_pos.top - par_pos.top;
+
+    TweenLite.to($('#par1'), 1.7, {opacity: 0});
+    TweenLite.to($('#par2'), 1.7, {opacity: 0});
+
+    $('#child').html(findChar($('#par1').html()).name);
+
+    TweenLite.set($('#child'), {opacity: 0});
+    TweenLite.set($('#child'), {x: `-=${left_diff}px`, y: `-=${top_diff}px`} );
+    TweenLite.to($('#child'), 1.7, {opacity: 1, x: `+=${left_diff}px`, y: `+=${top_diff}px`});
+
+    const par1 = findChar($('#par1').html()).parents[0];
+    const par2 = findChar($('#par1').html()).parents.length > 1 ? findChar($('#par1').html()).parents[1] : '';
+
+    $('#par1').html(par1);
+    $('#par2').html(par2);
+
+    TweenLite.to($('#par1'), 1.7, {opacity: 1});
+    TweenLite.to($('#par2'), 1.7, {opacity: 1});
+    
+  });
+
+  $('#par2').on('click', function() {
+    // console.log('clicked right', $('#par2').html());
+  });
+
+  $('#child').on('click', function() {
+    // console.log(window);
+    // console.log('clicked child', $('#child').html());
+    const $info = $('#child_info');
+
+    // Fade in play info on click:
+    TweenLite.to($info, 1.7, {opacity: 1}); // Add x:0 so we don't go out of screen.
+  });
 
   readFromProlog(arr);
-  // console.log(allPeeps);
 
   attachPlays();
-  console.log(allPeeps);
 
   // $.get('/stuff2').done(function(res) {
   //   console.log("stuff2, ", res);
@@ -21,31 +80,32 @@ $(document).ready(function() {
   //   console.log(err);
   // });
 
-  $.get('/stuff3').done(function(res) {
-    // console.log("stuff3, ", res);
-    // for (let i = 0; i < res.length; i++) {
-    //   let line = res[i].children[0].data;
-    //   console.log(line);
-    // }
-    for (let i=0; i < res.length; i++) {
-      let line = res[i];
-      if (line) {
-        allPeeps.forEach(peep => {
-          if (line.includes(peep.name[0].toUpperCase() + peep.name.slice(1))) {
-            let fact = line;
-            let date = res[i - 1];
-            
-            peep.facts.push({line: fact, date: date});
-          }
-        });
-      }
-    }
 
-    console.log(allPeeps);
 
-  }).catch(function(err) {
-    console.log(err);
-  });
+
+  // Doesnt seem to be getting any facts.....
+  // $.get('/stuff3').done(function(res) {
+  //   for (let i=0; i < res.length; i++) {
+  //     let line = res[i];
+  //     if (line) {
+  //
+  //       // NOTE: this could be a case of the confusing semantics of which they warn... We are getting all facts added to an empty-named item in allPeeps.
+  //       allPeeps.forEach(peep => {
+  //         if (line.includes(peep.name.toUpperCase() + peep.name.slice(1))) { // removing extraneous [0] here
+  //           let fact = line;
+  //           let date = res[i - 1];
+  //           if (!peep.facts) peep.facts = []; // adding this
+  //           peep.facts.push({line: fact, date: date});
+  //         }
+  //       });
+  //     }
+  //   }
+  //
+  //   console.log(allPeeps);
+  //
+  // }).catch(function(err) {
+  //   console.log(err);
+  // });
 
 
   // Issue: if you use '/' here, main page will direct here, so json will display in browser and console.log's *won't* execute (???):
@@ -77,14 +137,14 @@ $(document).ready(function() {
         let author = res[i-1];
         plays.push({play: play, author: author});
       }
-
     }
-
-    console.log("result, ", result);
-
     addScraped(result, allPeeps);
 
     console.log("allPeeps, ", allPeeps);
+
+    $('#par1').html(findChar(first_char).parents[0]);
+    $('#par2').html(findChar(first_char).parents[1]);
+    $('#child_info').html(findChar(first_char).plays2.map(p => `<p>${p.play}, ${p.author}</p>`).join(''));
 
   }).catch(function(err) {
     console.log(err);
@@ -117,14 +177,6 @@ function addScraped(chars, arr) {
 
   });
 }
-
-
-
-
-const arr = text.split('\n');
-// console.log(arr);
-
-let allPeeps = [{name: 'dummy'}];
 
 
 // Creating allPeeps object (This is so hideous):
