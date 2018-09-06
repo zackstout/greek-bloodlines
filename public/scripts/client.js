@@ -1,20 +1,53 @@
 
 
-import { text, plays } from './stuff.js';
+import { text, plays } from '../data/stuff.js';
 
 const arr = text.split('\n');
 
 let first_char;
 let allPeeps = [{name: 'dummy'}];
 
-function findChar(char) {
-  for (let i=0; i < allPeeps.length; i++) {
-    if (allPeeps[i].name == char) {
-      return allPeeps[i];
-    }
-  }
-  return null;
-}
+// ===========================================================================================
+// GreenSock:
+
+// Par is 1 or 2:
+function parentClick(p_in) { // 2 is mother (on the right), 1 is father (left)
+  const p_oth = p_in === 1 ? 2 : 1;
+  // console.log('clicked ', p_in, findChar($(`#par${p_in}`).html()).plays2);
+
+  const child_pos = $('#child').position();
+  const par_pos = $(`#par${p_in}`).position();
+  const top_diff = child_pos.top - par_pos.top;
+
+  let left_diff = child_pos.left - par_pos.left;
+
+  TweenLite.to($('#par1'), 1.7, {opacity: 0});
+  TweenLite.to($('#par2'), 1.7, {opacity: 0});
+
+  // Update child text:
+  $('#child').html(findChar($(`#par${p_in}`).html()).name);
+  // Update child_info:
+  const new_info = findChar($(`#par${p_in}`).html()).plays2 ? findChar($(`#par${p_in}`).html()).plays2.map(p => `<p>${p.play}, ${p.author}</p>`).join('') : '';
+  $('#child_info').html(new_info);
+
+  // Hide child, move it to parent's position, start moving it toward its old position:
+  TweenLite.set($('#child'), {opacity: 0});
+  TweenLite.set($('#child'), {x: `-=${left_diff}px`, y: `-=${top_diff}px`} );
+  TweenLite.to($('#child'), 1.7, {opacity: 1, x: `+=${left_diff}px`, y: `+=${top_diff}px`});
+
+  // Change text of the parent elements:
+  const par1 = findChar($(`#par${p_in}`).html()).parents[0];
+  const par2 = findChar($(`#par${p_in}`).html()).parents.length > 1 ? findChar($(`#par${p_in}`).html()).parents[1] : '';
+
+  $('#par1').html(par1);
+  $('#par2').html(par2);
+
+  TweenLite.to($('#par1'), 1.7, {opacity: 1});
+  TweenLite.to($('#par2'), 1.7, {opacity: 1});
+} // end parentClick function
+
+// ===========================================================================================
+// Document ready:
 
 $(document).ready(function() {
   first_char = 'agamemnon';
@@ -23,62 +56,18 @@ $(document).ready(function() {
   $('#child').html(first_char);
 
   // Click listeners:
-
-  // When a parent is clicked, we want to alter CHILD's property to hold that value, change the CHILD to live there, move it to previous CHILD-position, fade in newParents;
+  // When a parent is clicked, we want to alter CHILD's property to hold that value,
+  // change the CHILD to live there, move it to previous CHILD-position, fade in newParents;
   $('#par1').on('click', function() {
     console.log($('#par1').html());
     parentClick(1);
   });
 
-  // Par can be an int:
-  function parentClick(p_in) { // 2 is mother (on the right), 1 is father (left)
-    // console.log(p_in);
-    const p_oth = p_in === 1 ? 2 : 1;
-    console.log('clicked ', p_in, findChar($(`#par${p_in}`).html()).plays2);
-
-    const child_pos = $('#child').position();
-    const par_pos = $(`#par${p_in}`).position();
-    const top_diff = child_pos.top - par_pos.top;
-
-    let left_diff = child_pos.left - par_pos.left;
-
-    // How strange: we know p_in works (logs 1 or 2). But when we change the int in this condition, it affects *all* the movements (all from left or all from right)..
-    // it seems like we're not resetting the identities of those elements...so the onCLICK functions break.
-    // if (p_in === 2) left_diff = -left_diff;
-    // Oh....just needed to delete it??
-
-    TweenLite.to($('#par1'), 1.7, {opacity: 0});
-    TweenLite.to($('#par2'), 1.7, {opacity: 0});
-
-    // Update child text:
-    $('#child').html(findChar($(`#par${p_in}`).html()).name);
-    // Update child_info:
-    const new_info = findChar($(`#par${p_in}`).html()).plays2 ? findChar($(`#par${p_in}`).html()).plays2.map(p => `<p>${p.play}, ${p.author}</p>`).join('') : '';
-    $('#child_info').html(new_info);
-
-    // Hide child, move it to parent's position, start moving it toward its old position:
-    TweenLite.set($('#child'), {opacity: 0});
-    TweenLite.set($('#child'), {x: `-=${left_diff}px`, y: `-=${top_diff}px`} );
-    TweenLite.to($('#child'), 1.7, {opacity: 1, x: `+=${left_diff}px`, y: `+=${top_diff}px`});
-
-    // Change text of the parent elements:
-    const par1 = findChar($(`#par${p_in}`).html()).parents[0];
-    const par2 = findChar($(`#par${p_in}`).html()).parents.length > 1 ? findChar($(`#par${p_in}`).html()).parents[1] : '';
-
-    $('#par1').html(par1);
-    $('#par2').html(par2);
-
-    TweenLite.to($('#par1'), 1.7, {opacity: 1});
-    TweenLite.to($('#par2'), 1.7, {opacity: 1});
-  } // end parentClick function
-
 
   $('#par2').on('click', function() {
-    // console.log('clicked right', $('#par2').html());
-    console.log($('#par2').html());
-
     parentClick(2);
   });
+
 
   $('#child').on('click', function() {
     const $info = $('#child_info');
@@ -88,56 +77,14 @@ $(document).ready(function() {
   });
 
 
-
-
   readFromProlog(arr);
 
   attachPlays();
 
 
-
-  // $.get('/stuff2').done(function(res) {
-  //   console.log("stuff2, ", res);
-  //   // for (let i = 0; i < res.length; i++) {
-  //   //   let line = res[i].children[0].data;
-  //   //   console.log(line);
-  //   // }
-  // }).catch(function(err) {
-  //   console.log(err);
-  // });
-
-
-
-  // Doesnt seem to be getting any facts.....
-  // $.get('/stuff3').done(function(res) {
-  //   for (let i=0; i < res.length; i++) {
-  //     let line = res[i];
-  //     if (line) {
-  //
-  //       // NOTE: this could be a case of the confusing semantics of which they warn... We are getting all facts added to an empty-named item in allPeeps.
-  //       allPeeps.forEach(peep => {
-  //         if (line.includes(peep.name.toUpperCase() + peep.name.slice(1))) { // removing extraneous [0] here
-  //           let fact = line;
-  //           let date = res[i - 1];
-  //           if (!peep.facts) peep.facts = []; // adding this
-  //           peep.facts.push({line: fact, date: date});
-  //         }
-  //       });
-  //     }
-  //   }
-  //
-  //   console.log(allPeeps);
-  //
-  // }).catch(function(err) {
-  //   console.log(err);
-  // });
-
-
-
-  // Issue: if you use '/' here, main page will direct here, so json will display in browser and console.log's *won't* execute (???):
+  // Issue: if you use '/' here, main page will direct here, so json will display in browser
+  // and console.log's *won't* execute (???):
   $.get('/stuff').done(function(res) {
-    // console.log("stuff, ", res);
-
     // Each element of result array will be an object with name and plays properties:
     let result = [];
 
@@ -164,8 +111,8 @@ $(document).ready(function() {
         plays.push({play: play, author: author});
       }
     }
-    addScraped(result, allPeeps);
 
+    addScraped(result, allPeeps);
     console.log("allPeeps, ", allPeeps);
 
 
@@ -180,6 +127,8 @@ $(document).ready(function() {
 
 });
 
+// ===========================================================================================
+// Helper functions:
 
 function addScraped(chars, arr) {
   chars.forEach(char => {
@@ -269,8 +218,42 @@ function attachPlays() {
 }
 
 
+function findChar(char) {
+  for (let i=0; i < allPeeps.length; i++) {
+    if (allPeeps[i].name == char) {
+      return allPeeps[i];
+    }
+  }
+  return null;
+}
 
 
+
+
+
+// Doesnt seem to be getting any facts.....
+// $.get('/stuff3').done(function(res) {
+//   for (let i=0; i < res.length; i++) {
+//     let line = res[i];
+//     if (line) {
+//
+//       // NOTE: this could be a case of the confusing semantics of which they warn... We are getting all facts added to an empty-named item in allPeeps.
+//       allPeeps.forEach(peep => {
+//         if (line.includes(peep.name.toUpperCase() + peep.name.slice(1))) { // removing extraneous [0] here
+//           let fact = line;
+//           let date = res[i - 1];
+//           if (!peep.facts) peep.facts = []; // adding this
+//           peep.facts.push({line: fact, date: date});
+//         }
+//       });
+//     }
+//   }
+//
+//   console.log(allPeeps);
+//
+// }).catch(function(err) {
+//   console.log(err);
+// });
 
 
 
