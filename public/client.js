@@ -26,49 +26,75 @@ $(document).ready(function() {
 
   // When a parent is clicked, we want to alter CHILD's property to hold that value, change the CHILD to live there, move it to previous CHILD-position, fade in newParents;
   $('#par1').on('click', function() {
-    console.log('clicked left', findChar($('#par1').html()).plays2);
+    console.log($('#par1').html());
+    parentClick(1);
+  });
+
+  // Par can be an int:
+  function parentClick(p_in) { // 2 is mother (on the right), 1 is father (left)
+    // console.log(p_in);
+    const p_oth = p_in === 1 ? 2 : 1;
+    console.log('clicked ', p_in, findChar($(`#par${p_in}`).html()).plays2);
 
     const child_pos = $('#child').position();
-    const par_pos = $('#par1').position();
-    const left_diff = child_pos.left - par_pos.left;
+    const par_pos = $(`#par${p_in}`).position();
     const top_diff = child_pos.top - par_pos.top;
+
+    let left_diff = child_pos.left - par_pos.left;
+
+    // How strange: we know p_in works (logs 1 or 2). But when we change the int in this condition, it affects *all* the movements (all from left or all from right)..
+    // it seems like we're not resetting the identities of those elements...so the onCLICK functions break.
+    // if (p_in === 2) left_diff = -left_diff;
+    // Oh....just needed to delete it??
 
     TweenLite.to($('#par1'), 1.7, {opacity: 0});
     TweenLite.to($('#par2'), 1.7, {opacity: 0});
 
-    $('#child').html(findChar($('#par1').html()).name);
+    // Update child text:
+    $('#child').html(findChar($(`#par${p_in}`).html()).name);
+    // Update child_info:
+    const new_info = findChar($(`#par${p_in}`).html()).plays2 ? findChar($(`#par${p_in}`).html()).plays2.map(p => `<p>${p.play}, ${p.author}</p>`).join('') : '';
+    $('#child_info').html(new_info);
 
+    // Hide child, move it to parent's position, start moving it toward its old position:
     TweenLite.set($('#child'), {opacity: 0});
     TweenLite.set($('#child'), {x: `-=${left_diff}px`, y: `-=${top_diff}px`} );
     TweenLite.to($('#child'), 1.7, {opacity: 1, x: `+=${left_diff}px`, y: `+=${top_diff}px`});
 
-    const par1 = findChar($('#par1').html()).parents[0];
-    const par2 = findChar($('#par1').html()).parents.length > 1 ? findChar($('#par1').html()).parents[1] : '';
+    // Change text of the parent elements:
+    const par1 = findChar($(`#par${p_in}`).html()).parents[0];
+    const par2 = findChar($(`#par${p_in}`).html()).parents.length > 1 ? findChar($(`#par${p_in}`).html()).parents[1] : '';
 
     $('#par1').html(par1);
     $('#par2').html(par2);
 
     TweenLite.to($('#par1'), 1.7, {opacity: 1});
     TweenLite.to($('#par2'), 1.7, {opacity: 1});
-    
-  });
+  } // end parentClick function
+
 
   $('#par2').on('click', function() {
     // console.log('clicked right', $('#par2').html());
+    console.log($('#par2').html());
+
+    parentClick(2);
   });
 
   $('#child').on('click', function() {
-    // console.log(window);
-    // console.log('clicked child', $('#child').html());
     const $info = $('#child_info');
 
     // Fade in play info on click:
     TweenLite.to($info, 1.7, {opacity: 1}); // Add x:0 so we don't go out of screen.
   });
 
+
+
+
   readFromProlog(arr);
 
   attachPlays();
+
+
 
   // $.get('/stuff2').done(function(res) {
   //   console.log("stuff2, ", res);
@@ -79,7 +105,6 @@ $(document).ready(function() {
   // }).catch(function(err) {
   //   console.log(err);
   // });
-
 
 
 
@@ -106,6 +131,7 @@ $(document).ready(function() {
   // }).catch(function(err) {
   //   console.log(err);
   // });
+
 
 
   // Issue: if you use '/' here, main page will direct here, so json will display in browser and console.log's *won't* execute (???):
@@ -142,6 +168,8 @@ $(document).ready(function() {
 
     console.log("allPeeps, ", allPeeps);
 
+
+    // Preparing for GreenSock:
     $('#par1').html(findChar(first_char).parents[0]);
     $('#par2').html(findChar(first_char).parents[1]);
     $('#child_info').html(findChar(first_char).plays2.map(p => `<p>${p.play}, ${p.author}</p>`).join(''));
@@ -151,7 +179,6 @@ $(document).ready(function() {
   });
 
 });
-
 
 
 function addScraped(chars, arr) {
@@ -217,7 +244,6 @@ function readFromProlog(arr) {
 }
 
 
-
 // There will be a bug if index is 0, because will look falsy. Ok i think we fixed it.
 function checkForName(arr, name) {
   for (var i=0; i < arr.length; i++) {
@@ -225,7 +251,6 @@ function checkForName(arr, name) {
   }
   return false;
 }
-
 
 
 function attachPlays() {
